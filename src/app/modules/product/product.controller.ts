@@ -1,18 +1,18 @@
-import { Request, Response } from "express";
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import httpStatus from "http-status";
-import * as productService from "./product.service";
-import { productSchema } from "./product.validation";
+import { Request, Response } from 'express';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
+import * as productService from './product.service';
+import { productSchema } from './product.validation';
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const parsedProduct = productSchema.parse(req.body);
   const newProduct = await productService.createProduct(parsedProduct);
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Product created successfully",
+    message: 'Product created successfully',
     data: newProduct,
   });
 });
@@ -23,7 +23,7 @@ const getProducts = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Products retrieved successfully",
+    message: 'Products retrieved successfully',
     data: products,
   });
 });
@@ -35,7 +35,7 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: httpStatus.NOT_FOUND,
       success: false,
-      message: "Product not found",
+      message: 'Product not found',
       data: null,
     });
     return;
@@ -44,7 +44,7 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Product retrieved successfully",
+    message: 'Product retrieved successfully',
     data: product,
   });
 });
@@ -57,7 +57,7 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Product updated successfully",
+    message: 'Product updated successfully',
     data: updatedProduct,
   });
 });
@@ -69,7 +69,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Product deleted successfully",
+    message: 'Product deleted successfully',
     data: deletedProduct,
   });
 });
