@@ -8,4 +8,5 @@ export interface ICartItem {
 export interface ICart {
   user: Types.ObjectId;
   items: ICartItem[];
+  totalPrice: number;
 }

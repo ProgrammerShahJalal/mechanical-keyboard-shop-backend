@@ -21,6 +21,7 @@ const cartSchema = new Schema<ICart>({
     required: true,
   },
   items: [cartItemSchema],
+  totalPrice: { type: Number, default: 0 },
 });
 
 const Cart = model<ICart>('Cart', cartSchema);
