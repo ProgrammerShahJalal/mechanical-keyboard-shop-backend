@@ -1,8 +1,44 @@
-import Product from "./product.model";
-import { IProduct } from "./product.interface";
+import Product from './product.model';
+import { IProduct } from './product.interface';
 
-export const getProducts = async () => {
-  return await Product.find();
+interface GetProductsParams {
+  search?: string;
+  brand?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export const getProducts = async (params: GetProductsParams) => {
+  const { search, brand, minPrice, maxPrice, sortBy, sortOrder } = params;
+  const query: any = {};
+
+  if (search) {
+    query.$or = [
+      { name: new RegExp(search, 'i') },
+      { brand: new RegExp(search, 'i') },
+    ];
+  }
+
+  if (brand) {
+    query.brand = brand;
+  }
+
+  if (minPrice) {
+    query.price = { ...query.price, $gte: minPrice };
+  }
+
+  if (maxPrice) {
+    query.price = { ...query.price, $lte: maxPrice };
+  }
+
+  let sort: any = {};
+  if (sortBy) {
+    sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
+  }
+
+  return await Product.find(query).sort(sort);
 };
 
 export const createProduct = async (productData: IProduct) => {

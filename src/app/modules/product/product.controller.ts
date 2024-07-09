@@ -19,7 +19,16 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getProducts = catchAsync(async (req: Request, res: Response) => {
-  const products = await productService.getProducts();
+  const { search, brand, minPrice, maxPrice, sortBy, sortOrder } = req.query;
+
+  const products = await productService.getProducts({
+    search: search?.toString(),
+    brand: brand?.toString(),
+    minPrice: parseFloat(minPrice?.toString() || ''),
+    maxPrice: parseFloat(maxPrice?.toString() || ''),
+    sortBy: sortBy?.toString(),
+    sortOrder: sortOrder?.toString() as 'asc' | 'desc',
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -28,6 +37,7 @@ const getProducts = catchAsync(async (req: Request, res: Response) => {
     data: products,
   });
 });
+
 
 const getProductById = catchAsync(async (req: Request, res: Response) => {
   const product = await productService.getProductById(req.params.id);
