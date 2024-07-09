@@ -4,12 +4,13 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import * as productService from './product.service';
 import { productSchema } from './product.validation';
+import { IProduct } from './product.interface';
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const parsedProduct = productSchema.parse(req.body);
   const newProduct = await productService.createProduct(parsedProduct);
 
-  sendResponse(res, {
+  sendResponse<IProduct>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Product created successfully',
@@ -41,7 +42,7 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
     return;
   }
 
-  sendResponse(res, {
+  sendResponse<IProduct>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Product retrieved successfully',
@@ -51,8 +52,8 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
 
 const updateProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const parsedProduct = productSchema.parse(req.body);
-  const updatedProduct = await productService.updateProduct(id, parsedProduct);
+  const productData: Partial<IProduct> = req.body;
+  const updatedProduct = await productService.updateProduct(id, productData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -66,7 +67,16 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const deletedProduct = await productService.deleteProduct(id);
 
-  sendResponse(res, {
+  if (!deletedProduct) {
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'Product not found',
+      data: null,
+    });
+  }
+
+  sendResponse<IProduct>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Product deleted successfully',

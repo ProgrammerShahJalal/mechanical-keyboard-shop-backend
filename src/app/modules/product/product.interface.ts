@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export interface IProduct {
   name: string;
   brand: string;
@@ -7,3 +9,5 @@ export interface IProduct {
   image: string;
   description: string;
 }
+
+export interface ProductModel extends Model<IProduct> {}
