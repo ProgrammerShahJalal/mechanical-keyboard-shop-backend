@@ -33,7 +33,7 @@ export const getProducts = async (params: GetProductsParams) => {
     query.price = { ...query.price, $lte: maxPrice };
   }
 
-  let sort: any = {};
+  const sort: any = {};
   if (sortBy) {
     sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
   }

@@ -1,10 +1,5 @@
-import mongoose from 'mongoose';
 import Stripe from 'stripe';
-import {
-  ICreateOrder,
-  IOrderItem,
-  IProcessStripePayment,
-} from './checkout.interface';
+import { IOrderItem } from './checkout.interface';
 import Product from '../product/product.model';
 import { Order } from './checkout.model';
 import config from '../../config';

@@ -29,10 +29,11 @@ export const createUser = async (userData: IUser) => {
     await session.endSession();
 
     return newUser[0];
-  } catch (err: any) {
+  } catch (err) {
+    const error = err as Error;
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
+    throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
 };
 
