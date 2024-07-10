@@ -26,14 +26,41 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const result = await userService.loginUser({ email, password });
+  const { user, accessToken, refreshToken } = await userService.loginUser({
+    email,
+    password,
+  });
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'User logged in successfully',
-    data: result.user,
-    token: result.token,
+    data: user,
+    token: accessToken,
+    refreshToken: refreshToken,
+  });
+});
+
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    sendResponse(res, {
+      success: false,
+      statusCode: httpStatus.BAD_REQUEST,
+      message: 'Refresh token is required',
+      data: null,
+    });
+    return;
+  }
+
+  const accessToken = await userService.refreshAccessToken(refreshToken);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Token refreshed successfully',
+    data: { accessToken },
   });
 });
 
@@ -125,6 +152,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 export const UserController = {
   signUp,
   login,
+  refreshToken,
   logout,
   getAllUsers,
   getUserById,

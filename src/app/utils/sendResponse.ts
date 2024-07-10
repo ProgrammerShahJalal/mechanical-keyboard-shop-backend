@@ -5,11 +5,19 @@ type TResponse<T> = {
   success: boolean;
   message?: string;
   token?: string;
+  refreshToken?: string;
   data: T;
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
-  const { statusCode, success, message, token, data: responseData } = data;
+  const {
+    statusCode,
+    success,
+    message,
+    token,
+    refreshToken,
+    data: responseData,
+  } = data;
   const responseBody: Record<string, unknown> = {
     success,
     statusCode,
@@ -19,6 +27,10 @@ const sendResponse = <T>(res: Response, data: TResponse<T>) => {
 
   if (token) {
     responseBody.token = token;
+  }
+
+  if (refreshToken) {
+    responseBody.refreshToken = refreshToken;
   }
 
   res.status(statusCode).json(responseBody);

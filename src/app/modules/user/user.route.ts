@@ -27,6 +27,7 @@ router.put(
   validateRequest(UserValidation.updateUser),
   UserController.updateUser
 );
+router.post('/refresh-token', UserController.refreshToken);
 
 router.delete('/:id', auth(USER_ROLE.admin), UserController.deleteUser);
 

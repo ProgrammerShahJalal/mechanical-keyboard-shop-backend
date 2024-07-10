@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import { User } from './user.model';
 import AppError from '../../errors/AppError';
@@ -68,11 +68,36 @@ export const loginUser = async ({
     throw new Error('Invalid email or password');
   }
 
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     { id: user._id, email: user.email, role: user.role },
     config.jwt_access_secret as string,
     { expiresIn: config.jwt_access_expires_in }
   );
 
-  return { user, token };
+  const refreshToken = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    config.jwt_refresh_secret as string,
+    { expiresIn: config.jwt_refresh_expires_in }
+  );
+
+  return { user, accessToken, refreshToken };
+};
+
+export const refreshAccessToken = async (refreshToken: string) => {
+  try {
+    const decoded = jwt.verify(
+      refreshToken,
+      config.jwt_refresh_secret as string
+    ) as JwtPayload;
+
+    const accessToken = jwt.sign(
+      { id: decoded.id, email: decoded.email, role: decoded.role },
+      config.jwt_access_secret as string,
+      { expiresIn: config.jwt_access_expires_in }
+    );
+
+    return accessToken;
+  } catch (err) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid refresh token');
+  }
 };
