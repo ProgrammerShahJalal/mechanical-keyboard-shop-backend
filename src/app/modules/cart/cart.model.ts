@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { ICart } from './cart.interface';
+import { ICart, ICartItem } from './cart.interface';
 
-const cartItemSchema = new Schema<ICart['items'][0]>({
+const cartItemSchema = new Schema<ICartItem>({
   product: {
     type: Schema.Types.ObjectId,
     ref: 'Product',
@@ -16,8 +16,7 @@ const cartItemSchema = new Schema<ICart['items'][0]>({
 
 const cartSchema = new Schema<ICart>({
   user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+    type: String, // Let's 'user' is now represented as a string (e.g., ucustomer name, address etc.) Beacuse Authentication part don't need to do only for this project.
     required: true,
   },
   items: [cartItemSchema],

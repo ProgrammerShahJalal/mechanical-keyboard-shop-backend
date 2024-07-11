@@ -22,18 +22,21 @@ const cartSchema = z.object({
 
 // Define the schema for adding an item to the cart
 const addToCartSchema = z.object({
+  userId: objectIdSchema,
   productId: objectIdSchema,
   quantity: z.number().min(1, 'Quantity must be at least 1'),
 });
 
 // Define the schema for updating an item in the cart
 const updateCartSchema = z.object({
+  userId: objectIdSchema,
   productId: objectIdSchema,
   quantity: z.number().min(1, 'Quantity must be at least 1'),
 });
 
 // Define the schema for removing an item from the cart
 const removeFromCartSchema = z.object({
+  userId: objectIdSchema,
   productId: objectIdSchema,
 });
 
