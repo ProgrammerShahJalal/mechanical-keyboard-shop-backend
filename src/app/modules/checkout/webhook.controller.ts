@@ -26,7 +26,7 @@ const handleStripeWebhook = async (req: Request, res: Response) => {
     case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       await Order.findOneAndUpdate(
-        { paymentIntentId: paymentIntent.id },
+        { sessionId: paymentIntent.id },
         { status: 'completed' }
       );
       break;
@@ -34,7 +34,7 @@ const handleStripeWebhook = async (req: Request, res: Response) => {
     case 'payment_intent.payment_failed': {
       const paymentIntentFailed = event.data.object as Stripe.PaymentIntent;
       await Order.findOneAndUpdate(
-        { paymentIntentId: paymentIntentFailed.id },
+        { sessionId: paymentIntentFailed.id },
         { status: 'failed' }
       );
       break;

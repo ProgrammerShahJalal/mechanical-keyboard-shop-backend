@@ -28,7 +28,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Order placed successfully',
-    data: { order, stripeCheckoutSessionId: order.stripeCheckoutSessionId },
+    data: { order, sessionId: order.sessionId },
   });
 });
 

@@ -7,7 +7,7 @@ type TResponse<T> = {
   token?: string;
   refreshToken?: string;
   data: T;
-  stripeCheckoutSessionId?: string;
+  sessionId?: string;
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {

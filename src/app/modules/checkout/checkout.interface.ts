@@ -12,5 +12,5 @@ export interface ICreateOrder {
   };
   cartItems: IOrderItem[];
   paymentMethod: 'cashOnDelivery' | 'stripe';
-  stripeCheckoutSessionId?: string; // only for stripe payment method
+  sessionId?: string; // only for stripe payment method
 }

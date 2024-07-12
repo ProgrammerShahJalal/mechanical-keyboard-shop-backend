@@ -47,7 +47,7 @@ const createOrder = async (
     })
   );
 
-  let stripeCheckoutSessionId;
+  let sessionId;
   if (paymentMethod === 'stripe') {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -66,7 +66,7 @@ const createOrder = async (
       cancel_url: `${config.clientUrl}/cancel`,
     });
 
-    stripeCheckoutSessionId = session.id;
+    sessionId = session.id;
   }
 
   const order = await Order.create({
@@ -74,7 +74,7 @@ const createOrder = async (
     cartItems, // Save original cart items (without detailed product info) in the order
     totalAmount,
     paymentMethod,
-    stripeCheckoutSessionId,
+    sessionId,
   });
 
   for (const item of cartItems) {

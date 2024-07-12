@@ -15,7 +15,7 @@ interface IOrder extends Document {
   cartItems: IOrderItem[];
   totalAmount: number;
   paymentMethod: 'cashOnDelivery' | 'stripe';
-  stripeCheckoutSessionId?: string; // for stripe payment
+  sessionId?: string; // for stripe payment
 }
 
 const OrderSchema: Schema = new Schema({
@@ -37,7 +37,7 @@ const OrderSchema: Schema = new Schema({
   ],
   totalAmount: { type: Number, required: true },
   paymentMethod: { type: String, required: true },
-  paymentIntentId: { type: String },
+  sessionId: { type: String },
 });
 
 export const Order = mongoose.model<IOrder>('Order', OrderSchema);
