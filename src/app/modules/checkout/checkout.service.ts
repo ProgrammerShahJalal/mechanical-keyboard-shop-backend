@@ -43,7 +43,7 @@ const createOrder = async (
   return order;
 };
 
-const getOrderByEmail = async (email: string) => {
+const getOrdersByEmail = async (email: string) => {
   const orders = await Order.find({ 'userDetails.email': email });
   return orders;
 };
@@ -55,6 +55,6 @@ const getAllOrders = async () => {
 
 export const CheckoutService = {
   createOrder,
-  getOrderByEmail,
+  getOrdersByEmail,
   getAllOrders,
 };

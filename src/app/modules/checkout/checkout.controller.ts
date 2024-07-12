@@ -34,10 +34,15 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getOrderByEmail = catchAsync(async (req: Request, res: Response) => {
-  const { email } = req.params;
+const getAllOrders = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.query;
 
-  const orders = await CheckoutService.getOrderByEmail(email);
+  let orders;
+  if (email) {
+    orders = await CheckoutService.getOrdersByEmail(email as string);
+  } else {
+    orders = await CheckoutService.getAllOrders();
+  }
 
   sendResponse(res, {
     success: true,
@@ -47,19 +52,7 @@ const getOrderByEmail = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllOrders = catchAsync(async (req: Request, res: Response) => {
-  const orders = await CheckoutService.getAllOrders();
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'All orders fetched successfully',
-    data: orders,
-  });
-});
-
 export const CheckoutController = {
   createOrder,
-  getOrderByEmail,
   getAllOrders,
 };
