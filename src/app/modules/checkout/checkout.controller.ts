@@ -18,24 +18,17 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     });
   }
 
-  console.log('req.body', req.body);
-
   const order = await CheckoutService.createOrder(
     userDetails,
     cartItems,
     paymentMethod
   );
 
-  let clientSecret;
-  if (paymentMethod === 'stripe') {
-    clientSecret = order.paymentIntentId;
-  }
-
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Order placed successfully',
-    data: { order, clientSecret },
+    data: { order, stripeCheckoutSessionId: order.stripeCheckoutSessionId },
   });
 });
 

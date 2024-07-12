@@ -24,28 +24,57 @@ const createOrder = async (
   cartItems: IOrderItem[],
   paymentMethod: 'cashOnDelivery' | 'stripe'
 ) => {
-  // Validate userDetails and cartItems
   if (!userDetails || !cartItems || cartItems.length === 0) {
     throw new Error('Invalid order data');
   }
 
   const totalAmount = await calculateTotalAmount(cartItems);
 
-  let paymentIntent;
+  // Fetch product details
+  const detailedCartItems = await Promise.all(
+    cartItems.map(async (item) => {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        throw new Error('Product not found');
+      }
+      return {
+        ...item,
+        product: {
+          name: product.name,
+          price: product.price,
+        },
+      };
+    })
+  );
+
+  let stripeCheckoutSessionId;
   if (paymentMethod === 'stripe') {
-    paymentIntent = await stripe.paymentIntents.create({
-      amount: totalAmount * 100, // Stripe amount is in cents
-      currency: 'usd',
-      receipt_email: userDetails.email,
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: detailedCartItems.map((item) => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.product.name,
+          },
+          unit_amount: item.product.price * 100,
+        },
+        quantity: item.quantity,
+      })),
+      mode: 'payment',
+      success_url: `${config.clientUrl}/success`,
+      cancel_url: `${config.clientUrl}/cancel`,
     });
+
+    stripeCheckoutSessionId = session.id;
   }
 
   const order = await Order.create({
     userDetails,
-    cartItems,
+    cartItems, // Save original cart items (without detailed product info) in the order
     totalAmount,
     paymentMethod,
-    paymentIntentId: paymentIntent?.id,
+    stripeCheckoutSessionId,
   });
 
   for (const item of cartItems) {

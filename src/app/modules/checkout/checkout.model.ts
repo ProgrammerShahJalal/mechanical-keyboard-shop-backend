@@ -15,7 +15,7 @@ interface IOrder extends Document {
   cartItems: IOrderItem[];
   totalAmount: number;
   paymentMethod: 'cashOnDelivery' | 'stripe';
-  paymentIntentId?: string;
+  stripeCheckoutSessionId?: string; // for stripe payment
 }
 
 const OrderSchema: Schema = new Schema({
