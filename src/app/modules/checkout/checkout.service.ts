@@ -2,8 +2,9 @@ import { IOrderItem } from './checkout.interface';
 import Product from '../product/product.model';
 import { Order } from './checkout.model';
 import Stripe from 'stripe';
+import config from '../../config';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(config.stripeSecretKey!, {
   apiVersion: '2024-06-20',
 });
 
