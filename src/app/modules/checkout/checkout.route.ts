@@ -4,7 +4,7 @@ import { WebhookController } from './webhook.controller';
 
 const router = express.Router();
 
-router.post('/checkout', CheckoutController.createOrder);
+router.post('/', CheckoutController.createOrder);
 router.get('/orders', CheckoutController.getAllOrders);
 router.post(
   '/webhook',
