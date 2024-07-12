@@ -14,8 +14,8 @@ const orderItemSchema = z.object({
 });
 
 const createOrderSchema = z.object({
-  user: objectIdSchema,
-  items: z.array(orderItemSchema),
+  userDetails: objectIdSchema,
+  cartItems: z.array(orderItemSchema),
   paymentMethod: z.enum(['cashOnDelivery', 'stripe']),
 });
 

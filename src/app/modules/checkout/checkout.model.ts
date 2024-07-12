@@ -1,8 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IOrder extends Document {
-  user: mongoose.Types.ObjectId;
-  items: { product: mongoose.Types.ObjectId; quantity: number }[];
+  userDetails: mongoose.Types.ObjectId;
+  cartItems: { product: mongoose.Types.ObjectId; quantity: number }[];
   totalAmount: number;
   paymentMethod: 'cashOnDelivery' | 'stripe';
   status: 'pending' | 'completed' | 'failed';
@@ -12,8 +12,8 @@ export interface IOrder extends Document {
 
 const orderSchema: Schema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    items: [
+    userDetails: { type: Schema.Types.ObjectId, required: true },
+    cartItems: [
       {
         product: {
           type: Schema.Types.ObjectId,

@@ -6,18 +6,17 @@ export interface IOrderItem {
 }
 
 export interface IOrder {
-  user: Types.ObjectId;
-  items: IOrderItem[];
+  userDetails: Types.ObjectId;
+  cartItems: IOrderItem[];
   totalAmount: number;
   paymentMethod: 'cashOnDelivery' | 'stripe';
-  status: 'pending' | 'completed' | 'failed';
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface ICreateOrder {
-  user: Types.ObjectId;
-  items: IOrderItem[];
+  userDetails: Types.ObjectId;
+  cartItems: IOrderItem[];
   paymentMethod: 'cashOnDelivery' | 'stripe';
 }
 

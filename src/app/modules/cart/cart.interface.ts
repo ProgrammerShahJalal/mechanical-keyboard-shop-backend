@@ -6,7 +6,7 @@ export interface ICartItem {
 }
 
 export interface ICart {
-  user: string;
-  items: ICartItem[];
+  userDetails: string;
+  cartItems: ICartItem[];
   totalPrice: number;
 }

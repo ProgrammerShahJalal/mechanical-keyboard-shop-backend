@@ -3,6 +3,7 @@ import { IOrderItem } from './checkout.interface';
 import Product from '../product/product.model';
 import { Order } from './checkout.model';
 import config from '../../config';
+import { Types } from 'mongoose';
 
 const stripe = new Stripe(config.stripeSecretKey as string, {
   apiVersion: '2024-06-20',
@@ -20,20 +21,25 @@ const calculateTotalAmount = async (items: IOrderItem[]) => {
 };
 
 const createOrder = async (
-  user: string,
-  items: IOrderItem[],
+  userDetails: Types.ObjectId,
+  cartItems: IOrderItem[],
   paymentMethod: 'cashOnDelivery' | 'stripe'
 ) => {
-  const totalAmount = await calculateTotalAmount(items);
+  // Validate userDetails and cartItems
+  if (!userDetails || !cartItems || cartItems.length === 0) {
+    throw new Error('Invalid order data');
+  }
+
+  const totalAmount = await calculateTotalAmount(cartItems);
 
   const order = await Order.create({
-    user,
-    items,
+    userDetails,
+    cartItems,
     totalAmount,
     paymentMethod,
   });
 
-  for (const item of items) {
+  for (const item of cartItems) {
     const product = await Product.findById(item.product);
     if (product) {
       product.availableQuantity -= item.quantity;

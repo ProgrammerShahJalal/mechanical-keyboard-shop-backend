@@ -16,8 +16,8 @@ const cartItemSchema = z.object({
 
 // Define the schema for the cart
 const cartSchema = z.object({
-  user: objectIdSchema,
-  items: z.array(cartItemSchema),
+  userDetails: objectIdSchema,
+  cartItems: z.array(cartItemSchema),
 });
 
 // Define the schema for adding an item to the cart

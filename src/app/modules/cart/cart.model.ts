@@ -15,11 +15,11 @@ const cartItemSchema = new Schema<ICartItem>({
 });
 
 const cartSchema = new Schema<ICart>({
-  user: {
+  userDetails: {
     type: String, // Let's 'user' is now represented as a string (e.g., ucustomer name, address etc.) Beacuse Authentication part don't need to do only for this project.
     required: true,
   },
-  items: [cartItemSchema],
+  cartItems: [cartItemSchema],
   totalPrice: { type: Number, default: 0 },
 });
 

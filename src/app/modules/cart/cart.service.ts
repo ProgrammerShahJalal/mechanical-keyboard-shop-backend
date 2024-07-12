@@ -7,7 +7,7 @@ import AppError from '../../errors/AppError';
 // Helper function to calculate total price
 const calculateTotalPrice = async (cart: ICart) => {
   let totalPrice = 0;
-  for (const item of cart.items) {
+  for (const item of cart.cartItems) {
     const product = await Product.findById(item.product);
     if (product) {
       totalPrice += product.price * item.quantity;
@@ -22,9 +22,9 @@ export const getCart = async (userInfo: {
   phone: string;
   address: string;
 }): Promise<ICart | null> => {
-  const cart = await Cart.findOne({ user: userInfo.name })
+  const cart = await Cart.findOne({ userDetails: userInfo.name })
     .populate({
-      path: 'items.product',
+      path: 'cartItems.product',
       model: Product,
     })
     .exec();
